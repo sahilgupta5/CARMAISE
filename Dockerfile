@@ -14,7 +14,7 @@ RUN mkdir -p /var/www/html/FoodLine
 #Clone the repository to setup CARMAISE server
 RUN git clone https://github.com/sahilgupta5/FoodLine.git /usr/local/repos/FoodLine
 RUN git clone https://github.com/sahilgupta5/Restaurantier.git /usr/local/repos/Restaurantier
-RUN git clone https://github.com/sahilgupta5/Restaurantier.git /usr/local/repos/CARMAISE
+RUN git clone https://github.com/sahilgupta5/CARMAISE.git /usr/local/repos/CARMAISE
 
 RUN mv /usr/local/repos/Restaurantier/* /var/www/html/
 RUN rm -rf /usr/local/repos/Restaurantier
