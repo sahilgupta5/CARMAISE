@@ -19,7 +19,7 @@ RUN rm -rf /var/www/html/*
 RUN mv /usr/local/repos/Restaurantier/* /var/www/html/
 RUN rm -rf /usr/local/repos/Restaurantier
 
-RUN mv /usr/local/repos/FoodLine/rest_resources/* /var/www/html/FoodLine
+RUN mv /usr/local/repos/FoodLine/rest_resources/* /var/www/html/FoodLine/
 RUN rm -rf /usr/local/repos/FoodLine
 
 RUN /bin/cp -rf /usr/local/repos/CARMAISE/apache2.conf /etc/apache2/
