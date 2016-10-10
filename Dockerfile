@@ -23,3 +23,4 @@ RUN rm -rf /usr/local/CARMAISE/FoodLine
 
 RUN /bin/cp -rf /usr/local/CARMAISE/apache2.conf /etc/apache2/
 RUN /bin/cp -rf /usr/local/CARMAISE/000-default.conf /etc/apache2/sites-available/000-default.conf
+RUN rm -rf /usr/local/CARMAISE
