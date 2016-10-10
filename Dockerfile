@@ -22,6 +22,6 @@ RUN rm -rf /usr/local/repos/Restaurantier
 RUN mv /usr/local/repos/FoodLine/rest_resources/* /var/www/html/FoodLine/
 RUN rm -rf /usr/local/repos/FoodLine
 
-RUN /bin/cp -rf /usr/local/repos/CARMAISE/apache2.conf /etc/apache2/
-RUN /bin/cp -rf /usr/local/repos/CARMAISE/000-default.conf /etc/apache2/sites-available/000-default.conf
+RUN cp -rf /usr/local/repos/CARMAISE/apache2.conf /etc/apache2/
+RUN cp -rf /usr/local/repos/CARMAISE/000-default.conf /etc/apache2/sites-available/000-default.conf
 RUN rm -rf /usr/local/repos/CARMAISE
