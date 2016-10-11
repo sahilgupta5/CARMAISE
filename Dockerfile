@@ -30,7 +30,7 @@ RUN mv /usr/local/repos/FoodLine/rest_resources/* /var/www/html/FoodLine/
 RUN /bin/bash -c "/usr/bin/mysqld_safe &" && \
   sleep 5 && \
   mysql -u root < /usr/local/repos/CARMAISE/configure-mysql.sql && \
-  mysql -user=FoodLineTestUser --password='foodline123!@#' -h localhost FoodLineDB < /usr/local/repos/FoodLine/database_dump_example/all_tables_dump_combined.sql
+  mysql -u root < /usr/local/repos/FoodLine/database_dump_example/all_tables_dump_combined.sql
 
 #Setup Apache webserver which serves content for CARMAISE
 RUN cp -rf /usr/local/repos/CARMAISE/apache2.conf /etc/apache2/
