@@ -1,8 +1,12 @@
 FROM nickistre/ubuntu-lamp:latest
 MAINTAINER Sahil Gupta <info@sahilgupta.info>
 
+# Setup environment
+ENV DEBIAN_FRONTEND noninteractive
+
 #Install git on the server
-RUN sudo apt-get --yes install git
+RUN apt-get update -y
+RUN sudo apt-get -y install git
 
 RUN mkdir -p /usr/local/repos
 RUN mkdir -p /usr/local/repos/FoodLine
@@ -23,8 +27,11 @@ RUN rm -rf /usr/local/repos/Restaurantier
 #Setup backend rest api services for FoodLine or FeedMee
 RUN mv /usr/local/repos/FoodLine/rest_resources/* /var/www/html/FoodLine/
 #Configure MySQL and import test data
-RUN mysql < /usr/local/repos/CARMAISE/configure-mysql.sql
-RUN /usr/local/repos/CARMAISE/configure-mysql-server.sh
+RUN /bin/bash -c "/usr/bin/mysqld_safe &" && \
+  sleep 5 && \
+  mysql -u root < /usr/local/repos/CARMAISE/configure-mysql.sql
+RUN chmod 755 /usr/local/repos/CARMAISE/*.sh
+RUN /usr/local/repos/CARMAISE/configure-mysql-server.sh /usr/local/repos/FoodLine/database_dump_example
 
 #Setup Apache webserver which serves content for CARMAISE
 RUN cp -rf /usr/local/repos/CARMAISE/apache2.conf /etc/apache2/
