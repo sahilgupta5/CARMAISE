@@ -10,7 +10,7 @@ fi
 sleep 5;
 done
 
-sudo yum install -y docker
+sudo apt-get install -y docker
 sudo service docker start
 
 sudo docker run -d -p 80:80 -p 3306:3306 -p 443:443 sahilgupta/carmaise

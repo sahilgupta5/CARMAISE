@@ -15,8 +15,8 @@ echo "Created key pair: $KEY_PAIR_NAME"
 SG_NAME=$(./createSGGroup.sh)
 echo "Created security group: $SG_NAME"
 
-#Create an AWS EC2 instance using Amazon Linux Image
-EC2_INSTANCE_ID=$(aws ec2 run-instances --image-id ami-b04e92d0 --user-data file:///Users/sahilgupta/Google\ Drive/Coding/Eclipse\ Workplace/CARMAISE/configure-server.sh --count 1 --instance-type t2.small --key-name $KEY_PAIR_NAME --security-groups $SG_NAME | jq .Instances[0].InstanceId | tr -d '"')
+#Create an AWS EC2 instance using Ubuntu 14.04 LTS Image
+EC2_INSTANCE_ID=$(aws ec2 run-instances --image-id ami-d732f0b7 --user-data file:///Users/sahilgupta/Google\ Drive/Coding/Eclipse\ Workplace/CARMAISE/configure-server.sh --count 1 --instance-type t2.small --key-name $KEY_PAIR_NAME --security-groups $SG_NAME | jq .Instances[0].InstanceId | tr -d '"')
 
 echo "Starting an EC2 instance for the CARMAISE and installing docker container on it: $EC2_INSTANCE_ID"
 aws ec2 describe-instances --instance-ids $EC2_INSTANCE_ID > $DIR_NAME/$EC2_INSTANCE_ID.json
