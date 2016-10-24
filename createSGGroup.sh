@@ -12,10 +12,10 @@ SG_NAME="carmaise-server-sg-$DATE"
 #Create a security group and use JQ to parse the SG GROUP ID returned
 SG_GROUP_ID=$(aws ec2 create-security-group --group-name $SG_NAME --description "CARMAISE server security group created at $DATE" | jq .GroupId | tr -d '"')
 
-aws ec2 authorize-security-group-ingress --group-id $SG_GROUP_ID --protocol tcp --port 80 --cidr 0.0.0.0/0
-aws ec2 authorize-security-group-ingress --group-id $SG_GROUP_ID --protocol tcp --port 443 --cidr 0.0.0.0/0
-aws ec2 authorize-security-group-ingress --group-id $SG_GROUP_ID --protocol tcp --port 3306 --cidr 0.0.0.0/0
-aws ec2 authorize-security-group-ingress --group-id $SG_GROUP_ID --protocol tcp --port 22 --cidr 0.0.0.0/0
+aws ec2 authorize-security-group-ingress --group-id $SG_GROUP_ID --protocol tcp --port 80 --cidr 0.0.0.0/0 > /dev/null 2>&1
+aws ec2 authorize-security-group-ingress --group-id $SG_GROUP_ID --protocol tcp --port 443 --cidr 0.0.0.0/0 > /dev/null 2>&1
+aws ec2 authorize-security-group-ingress --group-id $SG_GROUP_ID --protocol tcp --port 3306 --cidr 0.0.0.0/0 > /dev/null 2>&1
+aws ec2 authorize-security-group-ingress --group-id $SG_GROUP_ID --protocol tcp --port 22 --cidr 0.0.0.0/0 > /dev/null 2>&1
 
 echo $SG_NAME
 aws ec2 describe-security-groups --group-names $SG_NAME > $DIR_NAME/$SG_NAME.json
