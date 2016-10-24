@@ -9,3 +9,4 @@ git clone https://github.com/sahilgupta5/CARMAISE.git
 cd CARMAISE
 sudo ./updateServer.sh
 sudo ./installDocker.sh
+sudo ./containerizeRestaurantierAndRun.sh
