@@ -1,0 +1,18 @@
+{
+  "Comment": "Updating the alias if it exists or create one to point to new instance(s) which are started automatically by jenkins when it detects a change.",
+  "Changes": [
+    {
+      "Action": "UPSERT",
+      "ResourceRecordSet": {
+        "Name": "www.web.restaurantier.info.",
+        "Type": "A",
+        "TTL": 600,
+        "ResourceRecords": [
+          {
+            "Value": "@IP_RESTAURANTIER"
+          }
+        ]
+      }
+    }
+  ]
+}
