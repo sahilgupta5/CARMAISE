@@ -24,7 +24,9 @@ aws ec2 describe-instances --instance-ids $EC2_INSTANCE_ID > $DIR_NAME/$EC2_INST
 
 IP_RESTAURANTIER_INSTANCE=$(cat $DIR_NAME/$EC2_INSTANCE_ID.json | jq .Reservations[0].Instances[0].PublicIpAddress | tr -d '"')
 
-sed -i.bak "s|@IP_RESTAURANTIER|$IP_RESTAURANTIER_INSTANCE|g" update-carmaise-ip.json
+sed -i '' "s|@IP_RESTAURANTIER|$IP_RESTAURANTIER_INSTANCE|g" update-carmaise-ip.json
 
 echo "Changing the routing, making alias point to the new EC2 instance."
 aws route53 change-resource-record-sets --hosted-zone-id ZQ4GCH1PM0Y7X --change-batch file://update-carmaise-ip.json > $DIR_NAME/hosted-zone-change.json
+
+sed -i '' "s|$IP_RESTAURANTIER_INSTANCE|@IP_RESTAURANTIER|g" update-carmaise-ip.json
