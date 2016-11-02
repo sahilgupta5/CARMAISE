@@ -18,7 +18,9 @@ echo "Created security group: $SG_NAME"
 
 REGION=$(curl http://169.254.169.254/latest/dynamic/instance-identity/document|grep region|awk -F\" '{print $4}')
 
-AMI_ID=$(aws --region $REGION ec2 describe-images --filters Name=root-device-type,Values=ebs Name=architecture,Values=x86_64 Name=name,Values='ubuntu/images/hvm-ssd/ubuntu-trusty-14.04*' --query 'sort_by(Images, &Name)[-1].ImageId' --output text)
+IMG_NAME=$(aws --region $REGION ec2 describe-images --owners 099720109477 --filters Name=root-device-type,Values=ebs Name=architecture,Values=x86_64 Name=name,Values='*hvm-ssd/ubuntu-trusty-14.04*' | awk -F ': ' '/"Name"/ { print $2 | "sort" }' | tr -d '",' | tail -1)
+
+AMI_ID=$(aws --region $REGION ec2 describe-images --owners 099720109477 --filters Name=name,Values="$IMG_NAME" | awk -F ': ' '/"ImageId"/ { print $2 }' | tr -d '",')
 
 #Create an AWS EC2 instance using Ubuntu 14.04 LTS Image
 EC2_INSTANCE_ID=$(aws ec2 run-instances --image-id $AMI_ID --user-data file://configure-server.sh --count 1 --instance-type t2.small --key-name $KEY_PAIR_NAME --security-groups $SG_NAME | jq .Instances[0].InstanceId | tr -d '"')
