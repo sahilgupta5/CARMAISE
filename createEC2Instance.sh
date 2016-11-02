@@ -16,16 +16,24 @@ echo "Created key pair: $KEY_PAIR_NAME"
 SG_NAME=$(./createSGGroup.sh)
 echo "Created security group: $SG_NAME"
 
+REGION=$(curl http://169.254.169.254/latest/dynamic/instance-identity/document|grep region|awk -F\" '{print $4}')
+
+AMI_ID=$(aws --region $REGION ec2 describe-images --filters Name=root-device-type,Values=ebs Name=architecture,Values=x86_64 Name=name,Values='ubuntu/images/hvm-ssd/ubuntu-trusty-14.04*' --query 'sort_by(Images, &Name)[-1].ImageId' --output text)
+
 #Create an AWS EC2 instance using Ubuntu 14.04 LTS Image
-EC2_INSTANCE_ID=$(aws ec2 run-instances --image-id ami-d732f0b7 --user-data file://configure-server.sh --count 1 --instance-type t2.small --key-name $KEY_PAIR_NAME --security-groups $SG_NAME | jq .Instances[0].InstanceId | tr -d '"')
+EC2_INSTANCE_ID=$(aws ec2 run-instances --image-id $AMI_ID --user-data file://configure-server.sh --count 1 --instance-type t2.small --key-name $KEY_PAIR_NAME --security-groups $SG_NAME | jq .Instances[0].InstanceId | tr -d '"')
 
 echo "Starting an EC2 instance for the CARMAISE and installing docker container on it: $EC2_INSTANCE_ID"
 aws ec2 describe-instances --instance-ids $EC2_INSTANCE_ID > $DIR_NAME/$EC2_INSTANCE_ID.json
 
-IP_RESTAURANTIER_INSTANCE=$(cat $DIR_NAME/$EC2_INSTANCE_ID.json | jq .Reservations[0].Instances[0].PublicIpAddress | tr -d '"')
+DNS_ROUTE="y"
 
-cp update-carmaise-ip.json $DIR_NAME/update-carmaise-ip.json
-sed -i.bak "s|@IP_RESTAURANTIER|$IP_RESTAURANTIER_INSTANCE|g" $DIR_NAME/update-carmaise-ip.json
+if [ $DNS_ROUTE = "y" ] || [ $DNS_ROUTE = "Y" ] || [ $DNS_ROUTE = "yes" ]; then
+  IP_RESTAURANTIER_INSTANCE=$(cat $DIR_NAME/$EC2_INSTANCE_ID.json | jq .Reservations[0].Instances[0].PublicIpAddress | tr -d '"')
 
-echo "Changing the routing, making alias point to the new EC2 instance."
-aws route53 change-resource-record-sets --hosted-zone-id ZQ4GCH1PM0Y7X --change-batch file://$DIR_NAME/update-carmaise-ip.json > $DIR_NAME/hosted-zone-change.json
+  cp update-carmaise-ip.json $DIR_NAME/update-carmaise-ip.json
+  sed -i.bak "s|@IP_RESTAURANTIER|$IP_RESTAURANTIER_INSTANCE|g" $DIR_NAME/update-carmaise-ip.json
+
+  echo "Changing the routing, making alias point to the new EC2 instance."
+  aws route53 change-resource-record-sets --hosted-zone-id ZQ4GCH1PM0Y7X --change-batch file://$DIR_NAME/update-carmaise-ip.json > $DIR_NAME/hosted-zone-change.json
+fi
