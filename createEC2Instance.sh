@@ -28,7 +28,7 @@ EC2_INSTANCE_ID=$(aws ec2 run-instances --image-id $AMI_ID --user-data file://co
 echo "Starting an EC2 instance for the CARMAISE and installing docker container on it: $EC2_INSTANCE_ID"
 aws ec2 describe-instances --instance-ids $EC2_INSTANCE_ID > $DIR_NAME/$EC2_INSTANCE_ID.json
 
-DNS_ROUTE="y"
+DNS_ROUTE="n"
 
 if [ $DNS_ROUTE = "y" ] || [ $DNS_ROUTE = "Y" ] || [ $DNS_ROUTE = "yes" ]; then
   IP_RESTAURANTIER_INSTANCE=$(cat $DIR_NAME/$EC2_INSTANCE_ID.json | jq .Reservations[0].Instances[0].PublicIpAddress | tr -d '"')
